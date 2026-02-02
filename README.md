@@ -20,28 +20,37 @@ Make sure you have the following installed:
 - Node.js v20 or higher
   ```bash
   node --version
+  ```
 
   npm
-
+  ```bash
   npm --version
+  ```
 
 
 Git
-
+  ```bash
   git --version
+  ```
 
 
 
 
 Setup Instructions
 1. Clone Repository
+  ```bash
   git clone <repo_url>
+  ```
 
 2. Install Dependencies
+   ```bash
   npm install
+  ```
 
 3. Start Application
+  ```bash
   npm run develop
+  ```
 
 
 Once running, open:
@@ -79,5 +88,5 @@ This project was scaffolded using the official Strapi project generator, which c
 
 The system was then configured through the admin panel by defining a custom Blog content type and creating sample data to demonstrate content management functionality.
 
-```bash
+
 
