@@ -79,3 +79,6 @@ Project Approach
 This project was scaffolded using the official Strapi project generator, which created a complete backend service including configuration, database setup, admin panel, and API support.
 
 The system was then configured via the admin panel by defining a custom Blog content type and creating sample data to demonstrate content management functionality.
+
+
+Loom video url : https://www.loom.com/share/38d2d73edd3840669bb5b6c13305c385
