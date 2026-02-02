@@ -20,29 +20,40 @@ Make sure you have the following installed:
 - **Node.js v20 or higher**
   ```bash
   node --version
-npm
+  ```
 
-npm --version
-Git
+  npm
+  ```bash
+  npm --version
+  ```
 
-git --version
+  git
+  ```bash
+  git --version
+  ```
 
-Setup Instructions
-1. Clone the Repository
-git clone <repo_url>
+  Setup Instructions
+  1. Clone the Repository
+  ```bash
+  git clone <repo_url>
+  ```
 
-2. Install Dependencies
-npm install
+  2. Install Dependencies
+  ```bash
+  npm install
+  ```
+  3. Start the Application
+  ```bash
+  npm run develop
+  ```
+  
+  Once running, open the admin panel at:
+  ```bash
+  http://localhost:1337/admin
+  ```
 
-3. Start the Application
-npm run develop
 
-
-Once running, open the admin panel at:
-
-http://localhost:1337/admin
-
-Admin Setup
+  Admin Setup
 
 On first launch:
 
