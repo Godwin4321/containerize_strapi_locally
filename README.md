@@ -1,84 +1,241 @@
-# Strapi Internship Task
 
-## Overview
-This project demonstrates a local setup of a **Strapi Headless CMS** application created as part of an internship task. The system provides a backend service with an admin panel, a local database, and automatically generated APIs for managing content.
+# Strapi Docker Containerization Guide
+
+## Application Without Containerization
+
+Right now your app runs like this:
+
+```
+Your Laptop
+ ├─ Node.js installed
+ ├─ npm installed
+ ├─ Dependencies installed
+ └─ Strapi running
+```
+
+### Problems
+
+- Works only on YOUR machine
+- Version differences break apps
+- Hard to deploy
 
 ---
 
-## Tech Stack
-- Node.js 20
-- Strapi v5
-- SQLite
-- Git & GitHub
-- Linux
+## Containerization Solves This
+
+Docker packages everything into one unit:
+
+```
+Container
+ ├─ OS layer
+ ├─ Node.js
+ ├─ Dependencies
+ ├─ Strapi app
+ └─ Database files
+```
+
+So anyone can run your app using just:
+
+```bash
+docker run ...
+```
+
+No setup needed.  
+That’s why companies containerize applications.
 
 ---
 
-## Prerequisites
-Make sure you have the following installed:
+## What Is a Dockerfile?
 
-- **Node.js v20 or higher**
-  ```bash
-  node --version
-  ```
+A Dockerfile is like a **recipe** to build your application container.
 
-  npm
-  ```bash
-  npm --version
-  ```
+It tells Docker:
 
-  git
-  ```bash
-  git --version
-  ```
+- Which base OS to use
+- Install Node
+- Copy project files
+- Install dependencies
+- Start the app
 
-  Setup Instructions
-  1. Clone the Repository
-  ```bash
-  git clone <repo_url>
-  ```
+---
 
-  2. Install Dependencies
-  ```bash
-  npm install
-  ```
-  3. Start the Application
-  ```bash
-  npm run develop
-  ```
-  
-  Once running, open the admin panel at:
-  ```bash
-  http://localhost:1337/admin
-  ```
+## Task Goal
 
+1. Create Dockerfile  
+2. Build image  
+3. Run container  
+4. Access Strapi admin panel  
 
-  Admin Setup
+---
 
-On first launch:
+## Create Dockerfile
 
-Create an admin user
+Inside `strapi-app` folder:
 
-Log in to the Strapi dashboard
+```bash
+nano Dockerfile
+```
 
-Custom Content Type
-Blog
+Paste:
 
-Fields:
+```dockerfile
+# Use official Node image
+FROM node:20
 
-title (Text)
+# Set working directory
+WORKDIR /app
 
-description (Rich Text)
+# Copy package files first
+COPY package*.json ./
 
-publishedDate (Date)
+# Install dependencies
+RUN npm install
 
-A sample blog entry was created to verify database connectivity and API functionality.
+# Copy remaining project files
+COPY . .
 
-Project Approach
+# Build admin panel
+RUN npm run build
 
-This project was scaffolded using the official Strapi project generator, which created a complete backend service including configuration, database setup, admin panel, and API support.
+# Expose Strapi port
+EXPOSE 1337
 
-The system was then configured via the admin panel by defining a custom Blog content type and creating sample data to demonstrate content management functionality.
+# Start Strapi
+CMD ["npm", "run", "develop"]
+```
 
+---
 
-Loom video url : https://www.loom.com/share/38d2d73edd3840669bb5b6c13305c385
+## Dockerfile Explanation
+
+| Instruction | Purpose |
+|------------|---------|
+| FROM node:20 | Base Node image |
+| WORKDIR /app | App directory |
+| COPY package*.json | Copy dependency list |
+| RUN npm install | Install dependencies |
+| COPY . . | Copy project |
+| RUN npm run build | Build admin panel |
+| EXPOSE 1337 | Open Strapi port |
+| CMD npm run develop | Start server |
+
+---
+
+## Install Docker
+
+```bash
+sudo apt update
+sudo apt install -y docker.io
+```
+
+Start & enable:
+
+```bash
+sudo systemctl start docker
+sudo systemctl enable docker
+```
+
+Verify:
+
+```bash
+docker --version
+```
+
+---
+
+## Fix Docker Permissions
+
+```bash
+sudo usermod -aG docker $USER
+newgrp docker
+```
+
+Test:
+
+```bash
+docker run hello-world
+```
+
+---
+
+## Build Docker Image
+
+```bash
+docker build -t strapi-app .
+```
+
+---
+
+## Important DevOps Principle
+
+Never copy `node_modules` into Docker images.
+
+Use `.dockerignore` to exclude:
+
+```
+node_modules
+.git
+dist
+database
+.env
+```
+
+---
+
+## Rebuild Clean Image
+
+```bash
+docker build --no-cache -t strapi-app .
+```
+
+---
+
+## Environment Variable Configuration
+
+If Strapi fails due to missing secrets, run:
+
+```bash
+docker run -p 1337:1337 -e ADMIN_JWT_SECRET=myadminsecret -e APP_KEYS=myappkey1,myappkey2 -e API_TOKEN_SALT=myapitokensalt strapi-app
+```
+
+---
+
+## Push Image to Docker Hub
+
+Tag image:
+
+```bash
+docker tag strapi-app YOUR_USERNAME/strapi-app:latest
+```
+
+Push:
+
+```bash
+docker push YOUR_USERNAME/strapi-app:latest
+```
+
+---
+
+## Image Registries
+
+Docker images can be stored in:
+
+- Docker Hub
+- AWS ECR
+- Google Artifact Registry
+- Azure Container Registry
+- GitHub Container Registry
+
+---
+
+## Summary
+
+You successfully:
+
+- Containerized Strapi
+- Built Docker image
+- Ran container locally
+- Managed environment variables
+- Pushed image to registry
+
+This demonstrates real DevOps containerization workflow.
